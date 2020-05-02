@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thmleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width-wdith, initial-scale=1.0">
+    <title>添加/编辑博物馆信息</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css"/>
+    <script th:src="@{js/jquery-slim.min.js}" type="text/javascript"></script>
+    <script th:src="@{js/bootstrap.min.js}" type="text/javascript"></script>
+
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <h5>编辑博物馆信息</h5>
+    </div>
+    <div  class="row" th:if="${ok}">
+        <h5 class="alert alert-success" th:text="${ok}"></h5>
+    </div>
+    <form class="form-row" th:action="@{/savecontent}" th:object="${content}" method="POST">
+        <div class="col col-12">
+        <div class="row" th:if="${#fields}">
+            <p class="alert alert-danger" th:if="${#fields.hasErrors('*')}" >
+                <span th:each="err : ${#fields.errors('*')}" th:text="${err}+'&nbsp;'"></span>
+            </p>
+        </div>
+        <div class="row form-group">
+            <input type="hidden" th:field="*{cid}">
+            <label for="title">博物馆名称</label>
+            <input class="form-control" th:field="*{title}" required placeholder="请输入博物馆名称">
+        </div>
+        <div class="row form-group">
+            <label for="timg">博物馆图片</label>
+            <input  type="file" class="form-control" th:field="*{timg}" required placeholder="请输入博物馆图片">
+
+        </div>
+        <div class="row form-group">
+            <label form="contenttype" >类别</label>
+            <select class="form-control" th:field="*{type.tid}">
+                <option th:replace="::tree(${types},1)"></option>
+            </select>
+            <th:block th:fragment="tree(datas,level)">
+                <th:block th:each="d : ${datas}">
+                    <option th:text="${d.name+@utils.numstr('',level)}" th:value="${d.tid}"></option>
+                </th:block>
+                <th:block th:if="${d.sublists}" th:replace="this::tree(${d.sublists},${level*2})"></th:block>
+
+            </th:block>
+        </div>
+        <div class="row form-group">
+            <label for="contents">博物馆信息</label>
+            <textarea th:field="*{contents}"></textarea>
+        </div>
+        <div class="row form-group">
+            <button type="submit" class="btn btn-primary">保存</button>
+        </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>
