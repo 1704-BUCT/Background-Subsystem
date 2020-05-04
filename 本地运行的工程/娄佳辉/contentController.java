@@ -12,13 +12,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 @Controller
 public class contentController {
@@ -53,5 +55,35 @@ public class contentController {
         contentService.save(content);
         attr.addFlashAttribute("ok","保存成功！");
         return "redirect:/editcontent";
+    }
+    @RequestMapping("/uploadAudio")
+    @ResponseBody
+    public void uploadAudio(@RequestParam("upload")MultipartFile file){
+        if(!file.isEmpty()){
+            String filename=file.getOriginalFilename();
+            System.out.println("Load fn:"+filename);
+            //System.out.println("Load uploadfile:" + fname)
+            try {
+
+                String fileurl = "D:\\/" + filename;//存储路径如发生改变应相应改变
+                File f = new File(fileurl);
+                BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(f));
+                if (!f.exists()) {
+                    try {
+                        f.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                out.write(file.getBytes());
+                out.flush();
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else {
+            System.out.println("上传失败，因为文件是空的.");
+
+        }
     }
 }
