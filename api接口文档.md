@@ -16,33 +16,241 @@
 
 写完感觉服务和接口可能存在不对应的关系，请各组检查一下有没有自己需要的接口！！
 
-2020.4.30	删去了大量不需要的接口，修改了很多
+2020.4.30	删去了大量不需要的接口，修改了很多  
 
-| 功能                       | 请求类型 | url                             | 必填参数                                                     | 返回类型 | 返回数据示例                                                 | 疑问栏                                                       |
-| -------------------------- | -------- | ------------------------------- | ------------------------------------------------------------ | -------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| 返回单个博物馆信息         | get      | /museum/{mid}                   | mid                                                          | json     | {<br />"mid":0,<br />"name":"博物馆0",<br />“introduction”:“2333”,<br />“opentime”:“8:00am-5:00pm”,<br />~~~"collection":[cid0,cid1...],<br />"educations":[eid0,eid1,eid2],<br />"news":[nid0,nid2...],<br />"comments":[cid0,cid1...],~~~<br />"lng":116.34528,<br />"lat":39.21028<br />} | **修改返回数据**                                             |
-| 返回某些博物馆信息         | get      | /museum/findByName/{name}       | sreachkw(搜索关键字：博物馆名字)                             | json     | [<br />{<br />"mid":0,<br />"name":"博物馆0",<br />“introduction”:“2333”,<br />“opentime”:“8:00am-5:00pm”,<br />~~~"collection":[cid0,cid1...],<br />"educations":[eid0,eid1,eid2],<br />"news":[nid0,nid2...],<br />"comments":[cid0,cid1...],<br />"lng":116.34528,<br />"lat":39.21028<br />},<br />{<br />"mid":1,<br />"name":"博物馆1",<br />“introduction”:“2333”,<br />“opentime”:“8:00am-5:00pm”,<br />"collection":[cid0,cid1...],<br />"educations":[eid0,eid1,eid2],<br />"news":[nid0,nid2...],<br />"comments":[cid0,cid1...],<br />"lng":116.34528,<br />"lat":39.21028<br />}...<br />] | 搜索到几个博物馆就返回几个博物馆的信息，如果搜索关键字为空，就返回数据库里所有（？会不会太多）博物馆的信息。**修改返回数据** |
-| 获取所有博物馆的基本信息   | get      | /museum/findAll                 | 无                                                           |          | [<br/>		{<br/>		mid:1,<br/>		name:1,<br/>		imgurl:图片 1,<br/>~~star:博物馆分数1~~<br/>		}，<br/>		{<br/>		mid:2,<br/>		name:2,<br/>		imgurl:图片2，<br/>		~~star:博物馆分数2	<br/>~~		},<br/>		...<br/>		]~~ | 方便APP端以列表方式展示，按star从大到小排序<br />**新增接口** |
-| 获取单个展览信息           | get      | /exhibition/{id}                | eid                                                          | json     | {<br />"eid":0,<br />"mid":0,<br />"name":"震惊！博物馆0的惊天藏品！",<br />"imgurl":"",<br />"time":"2020-04-29, 8:00am",<br />"mname":所属博物馆名字（查表）,<br />"address":"北京三和胡同996号",<br />"introduction":"这个展览由ACM大牛举办，为世界第一届ACM展览会。到场的嘉宾有AAA，BBB……",<br />~~"explanations":[该展览的所有讲解]（查表）~~<br />} | **修改返回数据**                                             |
-| 搜索展览基本信息           | get      | /exhibition/findByName/{name}   | searchkw(搜索关键字：name)                                   | json     | [<br />数据同上<br />]                                       | 这个展览的时间格式要商量一下<br />**如果搜索结果有几个展览就返回几个展览，如果有多个，前端就显示第一个** |
-| 获取所有展览的信息         | get      | /exhibition/findAll             |                                                              | json     | [<br/>		{<br/>		"eid":0,<br/>		"name":展览的名称,<br/>		"mname":所属博物馆名称,<br/>		"imgurl":展览的图片<br/>		},<br/>		{<br/>		"eid":1,<br/>		"name":展览的名称,<br/>		"mname":所属博物馆名称,<br/>		"imgurl":展览的图片<br/>		},...<br/>		] | APP端可以以列表的形式展现**新增接口**                        |
-| 获取单个藏品信息           | get      | /collection/{id}                | cid                                                          | json     | {<br/>		cid:<br/>		name:<br/>		imgurl:<br/>		mname:所属博物馆名字.<br/>		maddress:博物馆地址,<br/>		introduce:<br/>		~~explainations:{讲解格式待定}~~<br/>		} | **新增接口**                                                 |
-| 获取某些藏品的信息         | get      | /collection/findByName/{name}   | searchkw(搜索关键字：名字)                                   |          | [<br />{<br/>		cid:<br/>		name:<br/>		imgurl:<br/>		mname:所属博物馆名字，<br/>		maddress:博物馆地址,<br/>		introduce:<br/>		~~explainations:{讲解格式待定}~~<br/>		}<br />……<br />] | **新增接口，数据里搜到几个藏品就返回几个藏品的信息，如果传来的字符串为空，就返回所有博物馆的信息** |
-| 获取所有藏品的基本信息     | get      | /collection/findAll             | 无                                                           |          | [<br />{<br/>		cid:0,<br/>		name:藏品名称,<br/>		imgurl:图片1,<br/>		mname:所属博物馆名称<br/>		},<br/>		{<br/>		cid:1,<br/>		name:藏品名称,<br/>		imgurl:图片2,<br/>		mname:所属博物馆名称<br/>		},...<br />] | **新增**                                                     |
-| 获取单个教育活动信息       | get      | /education/{id}                 | oid                                                          |          | {<br/>		oid:<br/>		name:<br/>		imgurl:<br/>		mname:所属博物馆名字.<br/>		maddress:博物馆地址,<br/>		introduction:<br/>		} | **新增**                                                     |
-| 搜索某个教育活动的信息     | get      | /education/findByName/{name}    | name                                                         |          | [<br />数据同上]                                             | **新增**                                                     |
-| 获取所有教育活动的信息     | get      | /education/findAll              | 无                                                           |          | [<br />{<br/>		oid:0,<br/>		name:藏品名称,<br/>		imgurl:图片1,<br/>		mname:所属博物馆名称<br/>		},<br/>		{<br/>		oid:1,<br/>		name:藏品名称,<br/>		imgurl:图片2,<br/>		mname:所属博物馆名称<br/>		},...] | **新增**                                                     |
-| 获取单个新闻               | get      | /news/{id}                      | nid（新闻id）                                                | json     | {<br/>		nid:1,<br/>		title:"新闻标题1",<br/>		author:"w1",<br/>		releasetime:2019-04-01,<br/>		extract:"摘要1",<br/>		imgurl:"新闻图片",<br/>		content:"新闻内容",<br/>		url:"新闻的具体内容",<br/>		} | **修改返回数据**                                             |
-| 获取所有的新闻             | get      | /news/findAll                   | 无                                                           | json     | [<br/>		{<br/>		nid:1,<br/>		title:"新闻标题1",<br/>		author:"w1",<br/>		releasetime:2019-04-01,<br/>		imgurl:"新闻图片url",<br/>		nature:1<br/>		},<br/>		{<br/>		nid:2,<br/>		title:"新闻标题2",<br/>		author:"w2",<br/>		releasetime:2019-04-01,<br/>		imgurl:"新闻图片url2",<br/>		nature:0<br/>		},...<br/>		] | 表示新闻是否是正面新闻<br />**修改返回数据**                 |
-| 爬取指定时间的新闻         | get      | 未实现                          | 无，管理员指定时间                                           | json     |                                                              | **最难的部分**需要控制一个python脚本定时运行、结束，还要实现后台能手动控制脚本运行。 |
-| 显示一个博物馆的所有评论   | get      | 未实现<br />/comments/forMuseum | searchkw：博物馆名称                                         |          | [<br />{uid:评论用户名字,<br/>  avatar:评论用户头像 <br/> time:评论时间,<br/> ustar:用户对博物馆的打分,<br/>content:评论内容}，<br/>{...},<br/>{...}<br />] | **新增**，按评论时间排序，最新的在最前                       |
-| 上传打分                   | post     | 未实现<br />/star/upload        | {<br/>		uid:<br/>		mid:<br/>		exhibitionstar:<br/>		servicestar:<br/>		environmentstar:<br/>		} |          | {state:1}(1为成功，0为失败)                                  | 仅有博物馆打分<br />**新增**                                 |
-| 上传评论                   | post     | 未实现<br />/comment/upload     | {<br/>		  uid:<br/>	       mid:<br/>		  time:<br/>		  content:<br/>} |          | {state:1}  (state值1为成功，0为失败)                         | **新增**                                                     |
-| 收藏展览                   | post     | 未实现<br />/mark/exhibition    | {<br />uid:1,<br/>eid:1	<br/>		}                    |          | {state:1}  (state值1为成功，0为失败)                         | **新增**                                                     |
-| 收藏展品                   | post     | 未实现<br />/mark/collection    | {<br />uid:1,<br/>cid:1	<br/>		}                    |          | {state:1}  (state值1为成功，0为失败)                         | **新增**                                                     |
-| 收藏教育活动               | post     | 未实现<br />/mark/education     | {uid:1,<br/>		oid:1	<br/>		}                  |          | {state:1}  (state值1为成功，0为失败)                         | **新增**                                                     |
-| 收藏的新闻                 | post     | 未实现<br />/mark/news          | {uid:1,<br/>		nid:1	<br/>		}                  |          | {state:1}  (state值1为成功，0为失败)                         | **新增**                                                     |
-| 获取一个用户所有的展览     | get      | 未实现<br />/user/exhibition    | uid                                                          |          | [<br />{<br/>		"star_eid":0,<br/>		"name":展览的名称,<br/>		"mname":所属博物馆名称,<br/>		"imgurl":展览的图片<br/>		},<br/>		{<br/>		"star_eid":1,<br/>		"name":展览的名称,<br/>		"mname":所属博物馆名称,<br/>		"imgurl":展览的图片<br/>		},...<br />] | **新增**                                                     |
-| 获取一个用户所有收藏的新闻 | get      | 未实现<br />/user/news          | uid                                                          |          | [<br />{<br/>		star_nid:1,<br/>		title:"新闻标题1",<br/>		author:"w1",<br/>		releasetime:2019-04-01,<br/>		imgurl:"新闻图片url",<br/>		nature:1<br/>		},<br/>		{<br/>		star_nid:2,<br/>		title:"新闻标题2",<br/>		author:"w2",<br/>		releasetime:2019-04-01,<br/>		imgurl:"新闻图片url2",<br/>		nature:0<br/>		},...<br />] | **新增**                                                     |
-| 获取用户所有收藏的藏品     | get      | 未实现<br />/user/collection    | uid                                                          |          | [<br />{<br/>		star_cid:0,<br/>		name:藏品名称,<br/>		imgurl:图片1,<br/>		mname:所属博物馆名称<br/>		},<br/>		{<br/>		star_cid:1,<br/>		name:藏品名称,<br/>		imgurl:图片2,<br/>		mname:所属博物馆名称<br/>		},...<br />] | **新增**                                                     |
-| 获取用户所有收藏的教育活动 | get      | 未实现<br />user/education      | uid                                                          |          | [<br />{<br/>		star_oid:0,<br/>		name:藏品名称,<br/>		imgurl:图片1,<br/>		mname:所属博物馆名称<br/>		},<br/>		{<br/>		star_oid:1,<br/>		name:藏品名称,<br/>		imgurl:图片2,<br/>		mname:所属博物馆名称<br/>		},...<br />] | **新增**                                                     |
+2020.5.7 修改部分加粗了
+
+
+#### 实体类
+
+用户信息表-users
+| 序号 | 字段          | 类型           | 默认值 | 是否NULL | PK   | FK   | 描述                         |
+| ---- | ------------- | -------------- | ------ | -------- | ---- | ---- | ---------------------------- |
+| 1    | uid           | int            |        | 否       | 是   | 否   | 用户编号                     |
+| 2    | account       | varchar（30）  |        | 否       | 否   | 否   | 账号                         |
+| 3    | password      | varchar（30）  |        | 否       | 否   | 否   | 密码                         |
+| 4    | name          | varchar（30）  |        | 是       | 否   | 否   | 姓名                         |
+| 5    | grander       | varchar（10）  |        | 是       | 否   | 否   | 性别                         |
+| 6    | birthday      | LocalDateTime  |        | 是       | 否   | 否   | 生日                         |
+| 7    | email         | varchar（255） |        | 是       | 否   | 否   | 邮箱                         |
+| 8    | mobile        | varchar（11）  |        | 是       | 否   | 否   | 手机                         |
+| 9    | lasttime      | int（11）      |        | 是       | 否   | 否   | 最后登陆时间                 |
+| 10   | logincount    | int（11）      |        | 是       | 否   | 否   | 登录次数                     |
+| 11   | validstate    | int（11）      | 0      | 是       | 否   | 否   | 是否有效（0为有效，1为无效） |
+| 12   | **avatarurl** | varchar(1000)  |        | 是       | 否   | 否   | 用户头像地址                 |
+
+
+
+博物馆信息表-museums
+
+| 序号 | 字段               | 类型            | 默认值 | 是否NULL | PK   | FK   | 描述         |
+| ---- | ------------------ | --------------- | ------ | -------- | ---- | ---- | ------------ |
+| 1    | mid                | int（11）       |        | 否       | 是   | 否   | 编号         |
+| 2    | name               | varchar（255）  |        | 是       | 否   | 否   | 博物馆名     |
+| 3    | introduction       | varchar（1000） |        | 是       | 否   | 否   | 基本介绍     |
+| 4    | opentime           | varchar（100）  |        | 是       | 否   | 否   | 开放时间     |
+| 5    | avgexhibitionstar  | double          | 0      | 否       | 否   | 否   | 平均展览分数 |
+|      | avgenvironmentstar | double          | 0      | 否       | 否   | 否   | 平均环境分数 |
+|      | avgservicestar     | double          | 0      | 否       | 否   | 否   | 平均服务分数 |
+| 6    |                    |                 |        |          |      |      |              |
+|      |                    |                 |        |          |      |      |              |
+| 8    | address            | varchar（255）  |        | 是       | 否   | 否   | 博物馆地址   |
+
+
+
+管理员表-admins
+
+| 序号 | 字段       | 类型           | 默认值 | 是否NULL | PK   | FK   | 描述                             |
+| ---- | ---------- | -------------- | ------ | -------- | ---- | ---- | -------------------------------- |
+| 1    | aid        | int（11）      |        | 否       | 是   | 否   | 编号                             |
+| 2    | account    | varchar（30）  |        | 否       | 否   | 否   | 账户                             |
+| 3    | name       | varchar（30）  |        | 否       | 否   | 否   | 昵称                             |
+| 4    | password   | varchar（30）  |        | 否       | 否   | 否   | 密码                             |
+| 5    | email      | varchar（255） |        | 是       | 否   | 否   | 邮箱                             |
+| 6    | mobile     | varchar（11）  |        | 是       | 否   | 否   | 手机                             |
+| 7    | lasttime   | int（11）      |        | 是       | 否   | 否   | 最后登陆时间                     |
+| 8    | logincount | int（11）      |        | 是       | 否   | 否   | 登录次数                         |
+| 9    | role       | int（11）      |        | 否       | 否   | 否   | 角色，0为系统管理员，1内容管理员 |
+| 10   | validstate | int（11）      | 0      | 是       | 否   | 否   | 是否有效（0表有效，1为无效）     |
+
+
+
+展览表-exhibitions
+
+| 序号 | 字段         | 类型                | 默认值 | 是否NULL | PK   | FK   | 描述         |
+| ---- | ------------ | ------------------- | ------ | -------- | ---- | ---- | ------------ |
+| 1    | eid          | int（11）           |        | 否       | 是   | 否   | 序号         |
+| 2    | mid          | int（11）           |        | 否       | 否   | 是   | 博物馆序号   |
+| 3    | name         | varchar（100）      |        | 否       | 否   | 否   | 展览名称     |
+| 4    | time         | varchar（100）      |        | 是       | 否   | 否   | 展览时间     |
+| 7    | imgurl       | **varchar（1000）** |        | 是       | 否   | 否   | 展览图片地址 |
+| 5    | address      | varchar（255）      |        | 是       | 否   | 否   | 展览地点     |
+| 6    | introduction | varchar（1000）     |        | 是       | 否   | 否   | 展览介绍     |
+| 7    | mname        | varchar（100）      |        | 是       | 否   | 否   | 所属博物馆   |
+
+
+
+藏品表-collections
+
+| 序号 | 字段         | 类型              | 默认值 | 是否NULL | PK   | FK   | 描述                   |
+| ---- | ------------ | ----------------- | ------ | -------- | ---- | ---- | ---------------------- |
+| 1    | cid          | int(11)           |        | 否       | 是   | 否   | 序号                   |
+| 2    | name         | varchar(255)      |        | 否       | 否   | 否   | 藏品名                 |
+| 3    | indroduction | varchar(1000)     |        | 是       | 否   | 否   | 藏品介绍               |
+| 4    | imgurl       | **varchar(1000)** |        | 是       | 否   | 否   | 图片服务器文件夹的路径 |
+| 5    | museum       | varchar(255)      |        | 是       | 否   | 否   | 所属博物馆的名字       |
+
+
+
+
+日志表-logs-**可由赵自己设计**
+
+| 序号 | 字段         | 类型           | 默认值 | 是否NULL | PK   | FK   | 描述               |
+| ---- | ------------ | -------------- | ------ | -------- | ---- | ---- | ------------------ |
+| 1    | lid          | int（11）      |        | 否       | 是   | 否   | 序号               |
+|      |              |                |        |          |      |      |                    |
+| 3    | operator     | varchar（30）  |        | 否       | 否   | 是   | 对应admin的account |
+| 4    | description  | varchar（255） |        | 否       | 否   | 否   | 记录操作           |
+| 5    | operatortime | LocalDateTime  |        | 否       | 否   | 否   | 操作时间           |
+| 6    | ip           | varchar（30）  |        | 否       | 否   | 否   | 操作者地址         |
+| 7    | status       | int（11）      |        | 否       | 否   | 否   | 操作完成状态       |
+
+
+
+新闻表-news**蒋写新闻的接口**
+
+| 序号 | 字段        | 类型                | 默认值 | 是否NULL | PK   | FK   | 描述                       |
+| ---- | ----------- | ------------------- | ------ | -------- | ---- | ---- | -------------------------- |
+| 1    | nid         | int（11）           |        | 否       | 是   | 否   | 序号                       |
+| 2    | title       | varchar（100）      |        | 否       | 否   | 否   | 标题                       |
+| 3    | extract     | varchar（255）      |        | 是       | 否   | 否   | 摘要，显示在新闻列表格     |
+| 4    | content     | varchar（3000）     |        | 是       | 否   | 否   | 新闻正文                   |
+|      | url         | **varchar（255）**  |        | 是       | 否   | 否   | 新闻源地址                 |
+| 6    | imgurl      | **varchar（1000）** |        | 是       | 否   | 否   | 图片地址                   |
+| 7    | author      | varchar（255）      |        | 是       | 否   | 否   | 新闻作者                   |
+| 8    | releasetime | LocalDateTime       |        | 是       | 否   | 否   | 发布时间                   |
+| 9    |             |                     |        |          |      |      |                            |
+| 10   |             |                     |        |          |      |      |                            |
+| 11   | nature      | int（11）           | 0      | 否       | 否   | 否   | 1正面，2负面               |
+| 12   | **sign**    | varchar（1000）     |        | 是       | 否   | 否   | 有关系的博物馆，以逗号隔开 |
+
+
+
+新闻与博物馆关系表-nmrs（News and Museums Relations）
+
+| 序号 | 字段 | 类型      | 默认值 | 是否NULL | PK   | FK   | 描述       |
+| ---- | ---- | --------- | ------ | -------- | ---- | ---- | ---------- |
+| 1    | id   | int（11） |        | 否       | 是   | 否   | 序号       |
+| 2    | nid  | int（11） |        | 否       | 否   | 是   | 新闻序号   |
+| 3    | mid  | int（11） |        | 否       | 否   | 是   | 博物馆序号 |
+
+
+
+**目前设计展览、教育活动指属于一个博物馆，用户只能对一个博物馆进行一次评论、打分。**
+
+展览和博物馆关系表-exmrs(Exhibition and Museums Relations)
+
+~~展览和博物馆关系表-exmrs(Exhibition and Museums Relations)~~
+
+| 序号 | 字段 | 类型    | 默认值 | 是否NULL | PK   | FK   | 描述       |
+| ---- | ---- | ------- | ------ | -------- | ---- | ---- | ---------- |
+| 1    | id   | int(11) |        | 否       | 是   | 否   | 序号       |
+| 2    | eid  | int(11) |        | 否       | 否   | 是   | 展览序号   |
+| 3    | mid  | int(11) |        | 否       | 否   | 是   | 博物馆序号 |
+
+
+
+~~教育和博物馆关系表-edmrs(Education and Museums Relations)~~
+
+| 序号 | 字段 | 类型    | 默认值 | 是否NULL | PK   | FK   | 描述       |
+| ---- | ---- | ------- | ------ | -------- | ---- | ---- | ---------- |
+| 1    | id   | int(11) |        | 否       | 是   | 否   | 序号       |
+| 2    | eid  | int(11) |        | 否       | 否   | 是   | 教育活动序号  |
+| 3    | mid  | int(11) |        | 否       | 否   | 是   | 博物馆序号 |
+
+
+
+~~评论和博物馆关系表-(Comment and Museum Relations)~~
+
+| 序号 | 字段 | 类型    | 默认值 | 是否NULL | PK   | FK   | 描述       |
+| ---- | ---- | ------- | ------ | -------- | ---- | ---- | ---------- |
+| 1    | id   | int(11) |        | 否       | 是   | 否   | 序号       |
+| 2    | cid  | int(11) |        | 否       | 否   | 是   | 评论序号  |
+| 3    | mid  | int(11) |        | 否       | 否   | 是   | 博物馆序号 |
+
+
+
+~~打分表-museumStars~~
+
+| 序号 | 字段            | 类型      | 默认值 | 是否NULL | PK   | FK   | 描述              |
+| ---- | --------------- | --------- | ------ | -------- | ---- | ---- | ----------------- |
+| 1    | id              | int（11） |        | 否       | 是   | 否   | 序号              |
+| 2    | uid             | int（11） |        | 否       | 否   | 是   | 用户id            |
+| 3    | mid             | int（11） |        | 否       | 否   | 是   | 博物馆id          |
+| 4    | exhibitionstar  | int（11） |        | 否       | 否   | 否   | 展览分数（1-5分） |
+| 5    | servicestar     | int（11） |        | 否       | 否   | 否   | 服务分数（1-5分） |
+| 6    | environmentstar | int（11） |        | 否       | 否   | 否   | 环境分数（1-5分） |
+
+
+
+评论表-comments
+
+| 序号  | 字段            | 类型                | 默认值 | 是否NULL | PK   | FK   | 描述                  |
+| ----- | --------------- | ------------------- | ------ | -------- | ---- | ---- | --------------------- |
+| 1     | id              | int（11）           |        | 否       | 是   | 否   | 序号                  |
+| 2     | uid             | int（11）           |        | 否       | 否   | 是   | 用户id                |
+| ~~3~~ |                 |                     |        |          |      |      |                       |
+| 4     | mid             | int（11）           |        | 否       | 否   | 是   | 博物馆id              |
+| ~~5~~ |                 |                     |        |          |      |      |                       |
+| ~~6~~ | environmentstar | int（11）           |        | 否       | 否   | 是   | 博物馆环境打分（1-5） |
+|       | servicestar     | int（11）           |        | 否       | 否   | 否   | 服务分数（1-5分）     |
+|       | exhibitionstar  | int（11）           |        | 否       | 否   | 否   | 展览分数（1-5分）     |
+| 7     | content         | varchar（1000）     |        | 否       | 否   | 否   | 评论内容              |
+| 8     | time            | varchar（20）       |        | 否       | 否   | 否   | 评论时间              |
+| 9     | imgurl          | **varchar（1000）** |        | 是       | 否   | 否   | 图片地址              |
+|       |                 |                     |        |          |      |      |                       |
+
+
+
+藏品讲解表-collection_explation
+
+| 序号 | 字段         | 类型              | 默认值 | 是否NULL | PK   | FK   | 描述       |
+| ---- | ------------ | ----------------- | ------ | -------- | ---- | ---- | ---------- |
+| 1    | id           | int(11)           |        | 否       | 是   | 否   | 序号       |
+| 2    | imgurl       | **varchar(1000)** |        | 是       | 否   | 否   | 讲解图片   |
+| 3    | soundurl     | **varchar(1000)** |        | 是       | 否   | 否   | 讲解音频   |
+| 4    | introduction | varchar（1000）   |        | 是       | 否   | 否   | 讲解文字   |
+|      | uid          | int（11）         |        | 否       | 否   | 是   | 用户id     |
+| 6    | cid          | int(11)           |        | 否       | 否   | 是   | 藏品id     |
+| 7    | mid          | int(11)           |        | 否       | 否   | 是   | 属于博物馆 |
+
+
+
+展览讲解表-exhibition_explation
+
+| 序号 | 字段         | 类型              | 默认值 | 是否NULL | PK   | FK   | 描述       |
+| ---- | ------------ | ----------------- | ------ | -------- | ---- | ---- | ---------- |
+| 1    | id           | int(11)           |        | 否       | 是   | 否   | 序号       |
+| 2    | imgurl       | **varchar(1000)** |        | 是       | 否   | 否   | 讲解图片   |
+| 3    | soundurl     | **varchar(1000)** |        | 是       | 否   | 否   | 讲解音频   |
+| 4    | introduction | varchar（1000）   |        | 是       | 否   | 否   | 讲解文字   |
+| 5    | uid          | int（11）         |        | 否       | 否   | 是   | 用户id     |
+|      | eid          | int(11)           |        | 否       | 否   | 是   | 展览id     |
+| 7    | mid          | int(11)           |        | 否       | 否   | 是   | 属于博物馆 |
+
+
+
+
+
+教育活动表-education
+
+| 序号 | 字段        | 类型                | 默认值 | 是否NULL | PK   | FK   | 描述                                  |
+| ---- | ----------- | ------------------- | ------ | -------- | ---- | ---- | ------------------------------------- |
+| 1    | oid         | int(11)             |        | 否       | 是   | 否   | 序号                                  |
+| 2    | name        | varchar(100)        |        | 是       | 否   | 否   | 活动名称                              |
+| 3    | imgurl      | **varchar（1000）** |        | 是       | 否   | 否   | 活动图片，url为在服务器中文件夹的名字 |
+| 4    | mname       | varchar（255）      |        | 是       | 否   | 否   | 博物馆名                              |
+| 5    | maddress    | varchar（255）      |        | 是       | 否   | 否   | 博物馆地址                            |
+| 6    | itroduction | varchar（1000）     |        | 是       | 否   | 否   | 教育活动介绍                          |
+| 7    | opentime    | varchar（100）      |        | 是       | 否   | 否   | 开展时间                              |
+
